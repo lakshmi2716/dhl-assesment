@@ -1,1 +1,29 @@
-<router-outlet />
+<div class="app-shell">
+
+
+  <header class="site-header">
+    <div class="header-inner">
+
+        <span class="brand-name">DHL </span>
+
+
+      <nav class="site-nav" aria-label="Main navigation">
+        <a routerLink="/scout/overview">Scout</a>
+        <a routerLink="/contacts">Contact</a>
+      </nav>
+
+
+    </div>
+  </header>
+
+  <main id="main-content" class="main-content" tabindex="-1">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© {{ currentYear }} All rights reserved</span>
+
+    </div>
+  </footer>
+</div>

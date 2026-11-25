@@ -1,0 +1,44 @@
+.pha-score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.pha-score-badge--high {
+  border-color: var(--p-red-200, #fecaca);
+  background: var(--p-red-50, #fef2f2);
+  color: var(--p-red-800, #991b1b);
+}
+
+.pha-score-badge--medium {
+  border-color: var(--p-amber-200, #fde68a);
+  background: var(--p-amber-50, #fffbeb);
+  color: var(--p-amber-800, #92400e);
+}
+
+.pha-score-badge--low {
+  border-color: var(--p-green-200, #bbf7d0);
+  background: var(--p-green-50, #f0fdf4);
+  color: var(--p-green-800, #166534);
+}
+
+.scout-grid {
+  display: block;
+  width: 100%;
+  height: min(64vh, 680px);
+  min-height: 24rem;
+}
+
+@media (max-width: 700px) {
+  .scout-grid {
+    height: 62vh;
+    min-height: 22rem;
+  }
+}

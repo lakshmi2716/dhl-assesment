@@ -1,7 +1,15 @@
 @use './base/reset';
+@use './base/typography';
+@use './components/ag-grid';
 @use './theme/semantic';
+
+html {
+  font-size: 16px;
+}
 
 body {
   color: var(--app-color-text);
   font-family: var(--app-font-family);
+  font-size: var(--app-font-size-base);
+  line-height: 1.5;
 }

@@ -3,18 +3,38 @@
 :root {
   color-scheme: light;
 
-  --app-color-primary: var(--p-primary-color, #4f46e5);
-  --app-color-primary-hover: var(--p-primary-hover-color, #4338ca);
+  --app-color-primary: var(--p-primary-color, #0284c7);
+  --app-color-primary-hover: var(--p-primary-hover-color, #0369a1);
   --app-color-text: var(--p-text-color, #334155);
   --app-color-text-muted: var(--p-text-muted-color, #64748b);
   --app-color-surface: var(--p-content-background, #ffffff);
   --app-color-border: var(--p-content-border-color, #cbd5e1);
   --app-color-focus: var(--p-focus-ring-color, var(--app-color-primary));
+  --app-color-page-surface: var(--p-surface-50, #f8fafc);
+  --app-color-primary-soft: var(--p-primary-50, #f0f9ff);
+  --app-color-impact-surface: var(--p-orange-50, #fff7ed);
+  --app-color-impact-border: var(--p-orange-200, #fed7aa);
+  --app-color-impact-text: var(--p-orange-800, #9a3412);
+  --app-color-pha-surface: var(--p-cyan-50, #ecfeff);
+  --app-color-pha-border: var(--p-cyan-200, #a5f3fc);
+  --app-color-pha-text: var(--p-cyan-800, #155e75);
+  --app-color-error-surface: var(--p-red-50, #fef2f2);
+  --app-color-error-border: var(--p-red-200, #fecaca);
+  --app-color-error-text: var(--p-red-800, #991b1b);
 
   --app-font-family: var(--font-family, Arial, sans-serif);
+  --app-font-size-base: 1rem;
+  --app-font-size-xs: 0.75rem;
+  --app-font-size-sm: 0.875rem;
+  --app-font-size-md: 1rem;
+  --app-font-size-lg: 1.125rem;
+  --app-font-size-xl: 1.25rem;
+  --app-font-size-2xl: 1.5rem;
+  --app-font-size-3xl: 1.875rem;
+  --app-font-size-4xl: 2.25rem;
   --app-radius-control: 0.5rem;
   --app-radius-card: 0.75rem;
-  --app-shadow-card: 0 1px 2px 0 rgb(0 0 0 / 5%);
+  --app-shadow-card: 0 4px 12px rgb(15 23 42 / 8%);
 
   --app-motion-duration-fast: 120ms;
   --app-motion-duration-normal: 200ms;

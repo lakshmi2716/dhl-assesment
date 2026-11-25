@@ -5,7 +5,8 @@
 - `tokens/` contains primitive Sass scales. These are compile-time values; they do not create CSS output.
 - `theme/_semantic.scss` exposes app-level CSS custom properties and maps semantic color roles to PrimeNG theme variables where available.
 - `theme/custom-preset.ts` configures PrimeNG's Nora preset and component tokens.
-- `base/` contains global baseline styles.
+- `base/` contains global reset and typography styles.
+- `components/` contains shared component-level styles, such as layout sizing for AG Grid.
 - `_index.scss` is the global stylesheet entrypoint, imported by `src/styles.scss`.
 
 ## Using Sass tokens in component styles

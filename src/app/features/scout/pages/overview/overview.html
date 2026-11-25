@@ -93,7 +93,72 @@
       [animateRows]="true"
       [loading]="store.loading()"
       (gridReady)="onGridReady($event)"
+      (cellClicked)="onCellClicked($event)"
       aria-label="Scout NEOCP hazard assessment data"
     />
   </section>
+
+  <p-drawer
+    [visible]="drawerVisible()"
+    (visibleChange)="drawerVisible.set($event)"
+    (onHide)="closeDetails()"
+    position="bottom"
+    [modal]="true"
+    [dismissible]="true"
+    [blockScroll]="true"
+    [style]="{ height: 'min(82vh, 760px)' }"
+    styleClass="object-details-drawer"
+    ariaLabel="Scout object details"
+  >
+    @if (detailView(); as detail) {
+      <div class="object-details">
+        <section class="detail-intro" aria-label="Object summary">
+          <div class="detail-intro__identity">
+            <span class="detail-eyebrow">SCOUT OBJECT PROFILE</span>
+            <h2>{{ detail.objectName }}</h2>
+            <p>Explore the observations, ephemeris, orbit estimates, and classification scores for this object.</p>
+          </div>
+          <div class="detail-status" [class.detail-status--elevated]="detail.elevated">
+            <i [class]="detail.statusIcon" aria-hidden="true"></i>
+            <span>
+              <strong>{{ detail.statusTitle }}</strong>
+              <small>Impact rating: {{ detail.ratingValue }}</small>
+            </span>
+          </div>
+        </section>
+
+        <section class="detail-highlights" aria-label="Key object facts">
+          @for (highlight of detail.highlights; track highlight.label) {
+            <article class="highlight-card">
+              <span [class]="'highlight-card__icon pi ' + highlight.icon" aria-hidden="true"></span>
+              <div>
+                <span class="highlight-card__label">{{ highlight.label }}</span>
+                <strong>{{ highlight.value }}</strong>
+              </div>
+            </article>
+          }
+        </section>
+
+        <div class="detail-sections">
+          @for (section of detail.sections; track section.title) {
+            <section class="detail-section" [attr.aria-label]="section.title">
+              <header class="detail-section__header">
+                <span class="detail-section__icon"><i [class]="section.icon" aria-hidden="true"></i></span>
+                <h3>{{ section.title }}</h3>
+              </header>
+              <div class="detail-field-grid">
+                @for (field of section.fields; track field.label) {
+                  <article class="detail-field">
+                    <h4>{{ field.label }}</h4>
+                    <p class="detail-field__value">{{ field.value }}</p>
+                    <p class="detail-field__description">{{ field.description }}</p>
+                  </article>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      </div>
+    }
+  </p-drawer>
 </main>

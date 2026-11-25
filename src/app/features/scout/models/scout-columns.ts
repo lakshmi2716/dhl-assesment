@@ -1,7 +1,9 @@
-import { ColDef, ValueGetterParams } from 'ag-grid-community';
+import { ColDef, ICellRendererParams, ValueGetterParams } from 'ag-grid-community';
 import { ScoutObject, ScoutValue } from './scout-object.model';
 
-type NumericScoutField = Exclude<keyof ScoutObject, 'objectName' | 'ra' | 'lastRun' | 'lastRunTimestamp'>;
+type NumericScoutField = Exclude<keyof ScoutObject, 'objectName' | 'ra' | 'lastRun' | 'tEphem'>;
+
+type TextScoutField = 'lastRun' | 'tEphem';
 
 function parseNumericValue(value: ScoutValue | undefined): number | null {
   if (value === null || value === undefined || value === '') {
@@ -30,12 +32,29 @@ function numericColumn(
   };
 }
 
+function textColumn(
+  field: TextScoutField,
+  headerName: string,
+  headerTooltip: string,
+  width: number,
+): ColDef<ScoutObject> {
+  return {
+    field,
+    headerName,
+    headerTooltip,
+    tooltipValueGetter: ({ value }) => String(value ?? ''),
+    width,
+    filter: 'agTextColumnFilter',
+    floatingFilter: false,
+  };
+}
+
 export const scoutColumnDefs: ColDef<ScoutObject>[] = [
   {
     field: 'objectName',
     headerName: 'Object',
     headerTooltip: 'Select an object to view its full Scout assessment',
-    width: 170,
+    width: 155,
     pinned: 'left',
     lockPinned: true,
     filter: 'agTextColumnFilter',
@@ -53,8 +72,34 @@ export const scoutColumnDefs: ColDef<ScoutObject>[] = [
       return button;
     },
   },
-  numericColumn('nObs', 'Observations', 'Total number of optical astrometric observations reported', 125),
-  numericColumn('arc', 'Arc (h)', 'Observation arc length in hours between the first and last observation', 115),
-  numericColumn('rating', 'Impact rating', 'Scout hazard rating; higher values indicate an elevated short-term impact possibility', 145),
-  numericColumn('caDist', 'Close approach (LD)', 'Median Earth close-approach distance in Lunar Distances (1 LD ≈ 384,400 km)', 175),
+  numericColumn('nObs', 'Observations', 'Number of observations available', 120),
+  numericColumn('arc', 'Arc (h)', 'Length of the observation data arc in hours', 105),
+  numericColumn('rating', 'Impact rating', 'A rating to characterize the chances of an Earth impact', 135),
+  numericColumn('caDist', 'Close approach (LD)', 'Close-approach distance to Earth in lunar distances (LD)', 165),
+  {
+    ...numericColumn('phaScore', 'PHA', 'Score for the object being a PHA (0–100)', 105),
+    tooltipValueGetter: ({ value }) => `PHA score: ${value ?? 'N/A'}`,
+    cellRenderer: ({ value }: ICellRendererParams<ScoutObject>) => {
+      if (value === null || value === undefined || value === '') {
+        return '<span class="pha-score-badge pha-score-badge--empty">N/A</span>';
+      }
+
+      const score = Number(value);
+      const level = score > 25 ? 'high' : score > 10 ? 'medium' : 'low';
+      const label = level[0].toUpperCase() + level.slice(1);
+      return `<span class="pha-score-badge pha-score-badge--${level}">${label}</span>`;
+    },
+  },
+  numericColumn('neoScore', 'NEO', 'Score for the object being a NEO (0–100)', 90),
+  numericColumn('neo1kmScore', 'NEO > 1 km', 'Score for the object being an NEO larger than 1 km in diameter (0–100)', 120),
+  // {
+  //   ...numericColumn('neoScore', 'NEO', 'Score for the object being a NEO (0–100)', 90),
+  //   valueFormatter: ({ value }) => (value == null ? '' : `${value}%`),
+  // },
+  // {
+  //   ...numericColumn('neo1kmScore', 'NEO > 1 km', 'Score for the object being an NEO larger than 1 km in diameter (0–100)', 120),
+  //   valueFormatter: ({ value }) => (value == null ? '' : `${value}%`),
+  // },
+  textColumn('lastRun', 'Last update (UTC)', 'Date/time of last object analysis computation (UTC)', 170),
+  textColumn('tEphem', 'Ephemeris time (UTC)', 'UTC time of the current ephemeris', 180),
 ];

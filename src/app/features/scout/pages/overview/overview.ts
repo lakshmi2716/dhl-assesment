@@ -42,6 +42,75 @@ interface DetailSection {
   fields: DetailField[];
 }
 
+const detailSections: DetailSection[] = [
+  {
+    title: 'Object & observation data',
+    icon: 'pi pi-chart-line',
+    fields: [
+      { key: 'objectName', label: 'Object designation', description: 'NEOCP temporary object designation' },
+      { key: 'nObs', label: 'Observations', description: 'Number of observations available' },
+      { key: 'arc', label: 'Observation arc', unit: 'hours', description: 'Length of the observation data arc in hours' },
+      { key: 'rmsN', label: 'Orbit-fit RMS', description: 'RMS of the weighted residuals for the best fitting orbit' },
+      { key: 'lastRun', label: 'Last update (UTC)', description: '(YYYY-MM-DD hh:mm) - Date/time of last object analysis computation (UTC)' },
+      { key: 'tEphem', label: 'Ephemeris time (UTC)', description: 'Time corresponding to the current ephemeris, in UTC' },
+    ],
+  },
+  {
+    title: 'Current ephemeris',
+    icon: 'pi pi-compass',
+    fields: [
+      { key: 'ra', label: 'Right ascension', description: 'Right Ascension of the current ephemeris (hh:mm, ICRF)' },
+      { key: 'dec', label: 'Declination', unit: 'degrees', description: 'Declination of the current ephemeris (degrees, ICRF)' },
+      { key: 'rate', label: 'Plane-of-sky rate', unit: 'arc-seconds per minute', description: 'Plane-of-sky rate of motion (arc-seconds per minute)' },
+      { key: 'elong', label: 'Solar elongation', unit: 'degrees', description: 'Solar elongation of the current ephemeris (degrees)' },
+      { key: 'unc', label: 'Current position uncertainty', unit: 'arc-minutes', description: '1-sigma uncertainty in the plane-of-sky of the current ephemeris (arc-minutes)' },
+      { key: 'uncP1', label: 'Position uncertainty in one day', unit: 'arc-minutes', description: '1-sigma uncertainty in the plane-of-sky one day after the current ephemeris (arc-minutes)' },
+      { key: 'Vmag', label: 'V-band magnitude', unit: 'mag', description: 'V-band magnitude estimate of the current ephemeris (mag)' },
+    ],
+  },
+  {
+    title: 'Brightness & size',
+    icon: 'pi pi-sun',
+    fields: [
+      { key: 'H', label: 'Absolute magnitude', description: 'Absolute magnitude' },
+    ],
+  },
+  {
+    title: 'Earth approach',
+    icon: 'pi pi-globe',
+    fields: [
+      { key: 'rating', label: 'Impact rating', description: 'A rating to characterize the chances of an Earth impact (0=negligible, 1=small, 2=modest, 3=moderate, 4=elevated)' },
+      { key: 'caDist', label: 'Close-approach distance', unit: 'lunar distances (LD)', description: 'Close-approach distance to Earth in lunar distances (LD)' },
+      { key: 'moid', label: 'Minimum orbit intersection distance', unit: 'au', description: 'Minimum distance between the orbits of Earth and the object (au)' },
+      { key: 'vInf', label: 'Asymptotic velocity', unit: 'km/s', description: 'Asymptotic velocity relative to Earth (when defined)' },
+    ],
+  },
+  {
+    title: 'Classification scores',
+    icon: 'pi pi-tags',
+    fields: [
+      { key: 'neoScore', label: 'NEO score', unit: '%', description: 'Score for the object being a NEO (0-100)' },
+      { key: 'neo1kmScore', label: 'NEO larger than 1 km score', unit: '%', description: 'Score for the object being an NEO larger than 1 km in diameter (0-100)' },
+      { key: 'phaScore', label: 'PHA score', unit: '%', description: 'Score for the object being a PHA (0-100)' },
+      { key: 'ieoScore', label: 'IEO score', unit: '%', description: 'Score for the object being an IEO, Interior Earth Object (0-100)' },
+      { key: 'geocentricScore', label: 'Geocentric orbit score', unit: '%', description: 'Score for the object having a geocentric orbit (0-100)' },
+      { key: 'tisserandScore', label: 'Jupiter Tisserand score', unit: '%', description: 'Score for the object having a Jupiter tisserand invariant less than 3, comet-like orbit (0-100)' },
+    ],
+  },
+];
+
+function hasValue(value: ScoutValue | undefined): value is string | number {
+  return value !== null && value !== undefined && value !== '';
+}
+
+function displayValue(value: ScoutValue | undefined, unit?: string): string {
+  if (!hasValue(value)) {
+    return '—';
+  }
+
+  return unit ? `${value} ${unit}` : String(value);
+}
+
 @Component({
   selector: 'app-overview',
   imports: [AgGridAngular, ButtonModule, DrawerModule],
@@ -51,69 +120,43 @@ interface DetailSection {
 export class Overview {
   readonly store = inject(ScoutStore);
   readonly columnDefs = scoutColumnDefs;
+  readonly detailView = computed(() => {
+    const object = this.selectedObject();
+    if (!object) {
+      return null;
+    }
+
+    const sections = detailSections
+      .map((section) => ({
+        title: section.title,
+        icon: section.icon,
+        fields: section.fields.flatMap((field) => {
+          const value = object[field.key];
+          return hasValue(value)
+            ? [{ label: field.label, value: displayValue(value, field.unit), description: field.description }]
+            : [];
+        }),
+      }))
+      .filter((section) => section.fields.length > 0);
+
+    const elevated = Number(object.rating) >= 1;
+    return {
+      objectName: String(object.objectName ?? 'Unknown object'),
+      elevated,
+      statusIcon: elevated ? 'pi pi-exclamation-triangle' : 'pi pi-shield',
+      statusTitle: elevated ? 'Elevated impact indicator' : 'No elevated impact indicator',
+      ratingValue: hasValue(object.rating) ? String(object.rating) : 'Not available',
+      highlights: [
+        { label: 'Observations', value: displayValue(object.nObs), icon: 'pi-eye' },
+        { label: 'Observation arc', value: displayValue(object.arc, 'h'), icon: 'pi-clock' },
+        { label: 'Closest approach', value: displayValue(object.caDist, 'LD'), icon: 'pi-globe' },
+        { label: 'PHA likelihood', value: displayValue(object.phaScore, '%'), icon: 'pi-shield' },
+      ],
+      sections,
+    };
+  });
   readonly selectedObject = signal<ScoutObject | null>(null);
   readonly drawerVisible = signal(false);
-  readonly detailSections: DetailSection[] = [
-    {
-      title: 'Observations & calculation',
-      icon: 'pi pi-chart-line',
-      fields: [
-        { key: 'nObs', label: 'Observations', description: 'Optical astrometric measurements used in this assessment.' },
-        { key: 'arc', label: 'Observation arc', unit: 'hours', description: 'Time between the first and most recent observations.' },
-        { key: 'lastRunTimestamp', label: 'Last calculated', description: 'UTC time of the latest Scout trajectory and hazard calculation.' },
-        { key: 'lastRun', label: 'Run identifier', description: 'Identifier for the latest Scout calculation.' },
-      ],
-    },
-    {
-      title: 'Position & motion',
-      icon: 'pi pi-compass',
-      fields: [
-        { key: 'ra', label: 'Right ascension', unit: 'J2000', description: 'Current geocentric position measured eastward across the sky.' },
-        { key: 'dec', label: 'Declination', unit: 'degrees · J2000', description: 'Current geocentric position measured north or south of the celestial equator.' },
-        { key: 'rate', label: 'Motion rate', unit: 'arcsec/min', description: 'Apparent rate of motion across the sky.' },
-        { key: 'elong', label: 'Solar elongation', unit: 'degrees', description: 'Angular separation between the object and the Sun.' },
-        { key: 'unc', label: 'Current position uncertainty', unit: 'arcmin', description: 'One-sigma uncertainty in the predicted sky position.' },
-        { key: 'uncP1', label: 'Uncertainty in 24 hours', unit: 'arcmin', description: 'Predicted one-sigma sky-position uncertainty 24 hours from now.' },
-      ],
-    },
-    {
-      title: 'Brightness & size',
-      icon: 'pi pi-sun',
-      fields: [
-        { key: 'Vmag', label: 'Visual magnitude', description: 'Predicted apparent visual brightness; smaller values are brighter.' },
-        { key: 'H', label: 'Absolute magnitude (H)', description: 'Intrinsic brightness estimate, often used as a proxy for object size.' },
-      ],
-    },
-    {
-      title: 'Earth approach',
-      icon: 'pi pi-globe',
-      fields: [
-        { key: 'rating', label: 'Impact rating', description: 'Scout hazard rating; a value of 1 or more indicates an elevated short-term impact possibility.' },
-        { key: 'caDist', label: 'Close-approach distance', unit: 'lunar distances', description: 'Median predicted distance from Earth. One lunar distance is about 384,400 km.' },
-        { key: 'moid', label: 'Earth MOID', unit: 'au', description: 'Minimum orbital distance between the object’s orbit and Earth’s orbit.' },
-        { key: 'vInf', label: 'Encounter velocity', unit: 'km/s', description: 'Hyperbolic excess velocity relative to Earth at close approach.' },
-      ],
-    },
-    {
-      title: 'Object classifications',
-      icon: 'pi pi-tags',
-      fields: [
-        { key: 'neoScore', label: 'Near-Earth object likelihood', unit: '%', description: 'Scout score indicating the likelihood of a near-Earth orbit.' },
-        { key: 'neo1kmScore', label: 'NEO larger than 1 km likelihood', unit: '%', description: 'Scout score for an NEO with an estimated size greater than 1 km.' },
-        { key: 'phaScore', label: 'Potentially hazardous asteroid likelihood', unit: '%', description: 'Scout score indicating the likelihood of a potentially hazardous asteroid classification.' },
-        { key: 'ieoScore', label: 'Interior-Earth object likelihood', unit: '%', description: 'Scout score indicating the likelihood of an Atira-type orbit.' },
-        { key: 'geocentricScore', label: 'Earth-bound orbit likelihood', unit: '%', description: 'Scout score indicating the likelihood of a geocentric orbit.' },
-        { key: 'tisserandScore', label: 'Comet-like orbit likelihood', unit: '%', description: 'Scout score indicating a Jupiter Tisserand parameter below 3.' },
-      ],
-    },
-    {
-      title: 'Orbit fit',
-      icon: 'pi pi-check-circle',
-      fields: [
-        { key: 'rmsN', label: 'Normalized RMS', description: 'Normalized residual error for the astrometric orbit fit.' },
-      ],
-    },
-  ];
   private gridApi?: GridApi<ScoutObject>;
   quickFilterText = '';
   readonly impactCount = computed(
@@ -134,6 +177,10 @@ export class Overview {
   readonly tooltipShowMode = 'standard' as const;
   readonly theme = themeQuartz;
 
+  constructor() {
+    this.store.load();
+  }
+
   onGridReady({ api }: GridReadyEvent<ScoutObject>): void {
     this.gridApi = api;
   }
@@ -150,10 +197,6 @@ export class Overview {
     this.selectedObject.set(null);
   }
 
-  hasValue(value: ScoutValue | undefined): boolean {
-    return value !== null && value !== undefined && value !== '';
-  }
-
   onQuickFilterChange(value: string): void {
     this.quickFilterText = value;
     this.gridApi?.setGridOption('quickFilterText', value);
@@ -166,9 +209,5 @@ export class Overview {
   resetFilters(): void {
     this.gridApi?.setFilterModel(null);
     this.clearQuickFilter();
-  }
-
-  constructor() {
-    this.store.load();
   }
 }

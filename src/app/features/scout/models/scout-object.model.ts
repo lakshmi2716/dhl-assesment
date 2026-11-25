@@ -23,8 +23,8 @@ export interface ScoutObject {
   geocentricScore?: ScoutValue;
   tisserandScore?: ScoutValue;
   rmsN?: ScoutValue;
-  lastRunTimestamp?: ScoutValue;
   lastRun?: ScoutValue;
+  tEphem?: ScoutValue;
 }
 
 export interface ScoutApiResponse {

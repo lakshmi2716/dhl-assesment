@@ -15,12 +15,7 @@ export class ScoutApiService {
 
   getObjects(): Observable<ScoutObject[]> {
     return this.http.get<ScoutApiResponse>(SCOUT_API_URL).pipe(
-      map(({ data = [] }) =>
-        data.map((object) => ({
-          ...object,
-          lastRunTimestamp: object.lastRunTimestamp ?? object.lastRun ?? null,
-        })),
-      ),
+      map(({ data = [] }) => data),
     );
   }
 }

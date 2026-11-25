@@ -1,1 +1,0 @@
-import{i as cl,n as Vp,r as al,t as Sp}from"./main-OQL5RRT7.js";var r=class t{static ɵfac=function(e){return new(e||t)};static ɵcmp=Sp({type:t,selectors:[[`app-overview`]],decls:2,vars:0,template:function(e,p){e&1&&(al(0,`p`),Vp(1,`overview works!`),cl())},encapsulation:2})};export{r as Overview};

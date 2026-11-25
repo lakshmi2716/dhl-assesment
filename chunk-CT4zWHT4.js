@@ -1,1 +1,0 @@
-var e=[{path:``,pathMatch:`full`,redirectTo:`overview`},{path:`overview`,title:`Scout overview`,loadComponent:()=>import(`./chunk-DKiJAK6v.js`).then(t=>t.Overview)}];export{e as scoutRoutes};

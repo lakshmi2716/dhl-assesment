@@ -1,0 +1,17 @@
+// PrimeNG owns the runtime palette. These references are intended for theming
+// layers; use semantic CSS variables for browser-rendered styles.
+$palette: (
+  indigo-50: '{indigo.50}',
+  indigo-100: '{indigo.100}',
+  indigo-200: '{indigo.200}',
+  indigo-300: '{indigo.300}',
+  indigo-400: '{indigo.400}',
+  indigo-500: '{indigo.500}',
+  indigo-600: '{indigo.600}',
+  indigo-700: '{indigo.700}',
+  indigo-800: '{indigo.800}',
+  indigo-900: '{indigo.900}',
+  indigo-950: '{indigo.950}',
+  white: #ffffff,
+  black: #000000,
+);

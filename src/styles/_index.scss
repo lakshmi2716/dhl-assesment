@@ -1,0 +1,7 @@
+@use './base/reset';
+@use './theme/semantic';
+
+body {
+  color: var(--app-color-text);
+  font-family: var(--app-font-family);
+}

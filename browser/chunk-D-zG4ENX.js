@@ -1,0 +1,1 @@
+import{i as cl,n as Vp,r as al,t as Sp}from"./main-OQL5RRT7.js";var s=class e{static ɵfac=function(t){return new(t||e)};static ɵcmp=Sp({type:e,selectors:[[`app-contact`]],decls:2,vars:0,template:function(t,p){t&1&&(al(0,`p`),Vp(1,`contact works!`),cl())},encapsulation:2})};export{s as Contact};

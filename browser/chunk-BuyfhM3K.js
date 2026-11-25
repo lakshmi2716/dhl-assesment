@@ -1,0 +1,1 @@
+var e=[{path:``,pathMatch:`full`,redirectTo:`overview`},{path:`overview`,title:`Scout overview`,loadComponent:()=>import(`./chunk-D_LyF-Vq.js`).then(t=>t.Overview)}];export{e as scoutRoutes};

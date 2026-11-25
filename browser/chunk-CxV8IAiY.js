@@ -1,0 +1,1 @@
+var o=[{path:``,pathMatch:`full`,redirectTo:`contact`},{path:`contact`,title:`Contact`,loadComponent:()=>import(`./chunk-BVsNf7It.js`).then(t=>t.Contact)}];export{o as contactsRoutes};

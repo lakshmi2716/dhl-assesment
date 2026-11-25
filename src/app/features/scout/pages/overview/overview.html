@@ -1,1 +1,99 @@
-<p>overview works!</p>
+<main class="scout-page">
+  <header class="page-header">
+    <h1>Scout Hazard Assessment</h1>
+    <p-button
+      [label]="store.loading() ? 'Updating…' : 'Refresh data'"
+      [icon]="store.loading() ? 'pi pi-spin pi-spinner' : 'pi pi-refresh'"
+      [disabled]="store.loading()"
+      (onClick)="store.load()"
+    />
+  </header>
+
+  <section class="overview-metrics" aria-label="Scout overview">
+    <article class="metric-card">
+      <i class="metric-icon pi pi-globe" aria-hidden="true"></i>
+      <div class="metric-copy">
+        <p class="metric-label">Active candidates</p>
+        <p class="metric-value">{{ store.objectCount() }}</p>
+      </div>
+      <span class="metric-note">NEOCP objects</span>
+    </article>
+    <article class="metric-card impact-metric">
+      <i class="metric-icon pi pi-exclamation-triangle" aria-hidden="true"></i>
+      <div class="metric-copy">
+        <p class="metric-label">Impact indicators</p>
+        <p class="metric-value">{{ impactCount() }}</p>
+      </div>
+      <span class="metric-note">Rating ≥ 1</span>
+    </article>
+    <article class="metric-card pha-metric">
+      <i class="metric-icon pi pi-shield" aria-hidden="true"></i>
+      <div class="metric-copy">
+        <p class="metric-label">PHA Objects</p>
+        <p class="metric-value">{{ phaObjectCount() }}</p>
+      </div>
+      <span class="metric-note">PHA score &gt; 0</span>
+    </article>
+  </section>
+
+  <section class="table-panel" aria-label="Scout hazard assessment table">
+    <div class="table-toolbar">
+      <div class="table-toolbar-actions">
+        <div class="quick-filter">
+          <label class="quick-filter__icon" for="scout-quick-filter">
+            <i class="pi pi-search" aria-hidden="true"></i>
+          </label>
+          <input
+            class="quick-filter__input"
+            id="scout-quick-filter"
+            type="search"
+            autocomplete="off"
+            placeholder="Search all columns…"
+            [value]="quickFilterText"
+            (input)="onQuickFilterChange($any($event.target).value)"
+          />
+          @if (quickFilterText) {
+            <p-button
+              icon="pi pi-times"
+              severity="secondary"
+              [text]="true"
+              ariaLabel="Clear search"
+              (onClick)="clearQuickFilter()"
+            />
+          }
+        </div>
+        <p-button
+          label="Clear filters"
+          icon="pi pi-filter-slash"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="resetFilters()"
+        />
+      </div>
+    </div>
+
+    @if (store.error(); as error) {
+      <div class="error-message" role="alert">
+        <span>{{ error }}</span>
+        <p-button label="Try again" icon="pi pi-refresh" severity="danger" [outlined]="true" (onClick)="store.load()" />
+      </div>
+    }
+
+    <ag-grid-angular
+      class="scout-grid"
+      [theme]="theme"
+      [rowData]="store.objects()"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [paginationPageSizeSelector]="pageSizeOptions"
+      [tooltipShowDelay]="tooltipShowDelay"
+      [tooltipShowMode]="tooltipShowMode"
+      [animateRows]="true"
+      [loading]="store.loading()"
+      (gridReady)="onGridReady($event)"
+      aria-label="Scout NEOCP hazard assessment data"
+    />
+  </section>
+</main>

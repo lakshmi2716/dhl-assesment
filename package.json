@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "github-build": "ng build --configuration production --base-href /dhl-assesment/",
+    "github-deploy": "npx angular-cli-ghpages --dir=dist/dhl-assesment/browser --no-silent"
   },
   "private": true,
   "packageManager": "npm@10.9.9",

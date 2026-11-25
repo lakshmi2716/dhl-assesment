@@ -3,7 +3,6 @@
     <h1>Scout Hazard Assessment</h1>
     <p-button
       [label]="store.loading() ? 'Updating…' : 'Refresh data'"
-      [icon]="store.loading() ? 'pi pi-spin pi-spinner' : 'pi pi-refresh'"
       [disabled]="store.loading()"
       (onClick)="store.load()"
     />
@@ -13,10 +12,10 @@
     <article class="metric-card">
       <i class="metric-icon pi pi-globe" aria-hidden="true"></i>
       <div class="metric-copy">
-        <p class="metric-label">Active candidates</p>
+        <p class="metric-label">Total objects</p>
         <p class="metric-value">{{ store.objectCount() }}</p>
       </div>
-      <span class="metric-note">NEOCP objects</span>
+
     </article>
     <article class="metric-card impact-metric">
       <i class="metric-icon pi pi-exclamation-triangle" aria-hidden="true"></i>
@@ -110,55 +109,46 @@
     styleClass="object-details-drawer"
     ariaLabel="Scout object details"
   >
-    @if (detailView(); as detail) {
-      <div class="object-details">
-        <section class="detail-intro" aria-label="Object summary">
-          <div class="detail-intro__identity">
-            <span class="detail-eyebrow">SCOUT OBJECT PROFILE</span>
-            <h2>{{ detail.objectName }}</h2>
-            <p>Explore the observations, ephemeris, orbit estimates, and classification scores for this object.</p>
-          </div>
-          <div class="detail-status" [class.detail-status--elevated]="detail.elevated">
-            <i [class]="detail.statusIcon" aria-hidden="true"></i>
-            <span>
-              <strong>{{ detail.statusTitle }}</strong>
-              <small>Impact rating: {{ detail.ratingValue }}</small>
-            </span>
-          </div>
-        </section>
+    <ng-template #headless>
+      @if (detailView(); as detail) {
+        <div class="object-details" >
 
-        <section class="detail-highlights" aria-label="Key object facts">
-          @for (highlight of detail.highlights; track highlight.label) {
-            <article class="highlight-card">
-              <span [class]="'highlight-card__icon pi ' + highlight.icon" aria-hidden="true"></span>
-              <div>
-                <span class="highlight-card__label">{{ highlight.label }}</span>
-                <strong>{{ highlight.value }}</strong>
-              </div>
-            </article>
-          }
-        </section>
 
-        <div class="detail-sections">
-          @for (section of detail.sections; track section.title) {
-            <section class="detail-section" [attr.aria-label]="section.title">
-              <header class="detail-section__header">
-                <span class="detail-section__icon"><i [class]="section.icon" aria-hidden="true"></i></span>
-                <h3>{{ section.title }}</h3>
-              </header>
-              <div class="detail-field-grid">
-                @for (field of section.fields; track field.label) {
-                  <article class="detail-field">
-                    <h4>{{ field.label }}</h4>
-                    <p class="detail-field__value">{{ field.value }}</p>
-                    <p class="detail-field__description">{{ field.description }}</p>
-                  </article>
+          <header class="object-details__header">
+              <h2 class="detail-title">{{ detail.objectName }}</h2>
+          </header>
+
+          <!-- Scrollable body -->
+          <div class="object-details__body">
+            <div class="object-details__content">
+
+              <div class="detail-sections">
+                @for (section of detail.sections; track section.title) {
+                  <section class="detail-section" [attr.aria-label]="section.title">
+                    <header class="detail-section__header">
+                      <span class="detail-section__icon">
+                        <svg [pIcon]="section.icon" aria-hidden="true"></svg>
+                      </span>
+                      <h3>{{ section.title }}</h3>
+                    </header>
+
+                    <div class="detail-field-grid">
+                      @for (field of section.fields; track field.label) {
+                        <article class="detail-field">
+                          <h4>{{ field.label }}</h4>
+                          <p class="detail-field__value">{{ field.value }}</p>
+                          <p class="detail-field__description">{{ field.description }}</p>
+                        </article>
+                      }
+                    </div>
+                  </section>
                 }
               </div>
-            </section>
-          }
+
+            </div>
+          </div>
         </div>
-      </div>
-    }
+      }
+    </ng-template>
   </p-drawer>
 </main>

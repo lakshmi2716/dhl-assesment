@@ -15,10 +15,21 @@
 }
 
 :where(h3) {
-  font-size: var(--app-font-size-xl);
+  font-size: var(--app-font-size-sm);
 }
 
 :where(p) {
   margin: 0;
   line-height: 1.5;
+}
+
+:where(strong) {
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+:where(small) {
+  font-size: 0.75rem;
+  color: var(--od-muted);
+  font-variant-numeric: tabular-nums;
 }

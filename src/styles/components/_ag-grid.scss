@@ -138,10 +138,3 @@
   height: min(64vh, 680px);
   min-height: 24rem;
 }
-
-@media (max-width: 700px) {
-  .scout-grid {
-    height: 62vh;
-    min-height: 22rem;
-  }
-}

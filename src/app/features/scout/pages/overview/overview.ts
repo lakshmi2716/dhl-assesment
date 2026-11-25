@@ -16,6 +16,7 @@ import {
   themeQuartz,
   TooltipModule,
 } from 'ag-grid-community';
+import { Check, Compass, Globe, Sun, Tags , PIcon, ChartLine} from '@primeicons/angular';
 import { ScoutObject, ScoutValue } from '../../models/scout-object.model';
 import { scoutColumnDefs } from '../../models/scout-columns';
 import { ScoutStore } from '../../state/scout.store';
@@ -45,7 +46,7 @@ interface DetailSection {
 const detailSections: DetailSection[] = [
   {
     title: 'Object & observation data',
-    icon: 'pi pi-chart-line',
+    icon: 'chart-line',
     fields: [
       { key: 'objectName', label: 'Object designation', description: 'NEOCP temporary object designation' },
       { key: 'nObs', label: 'Observations', description: 'Number of observations available' },
@@ -57,44 +58,27 @@ const detailSections: DetailSection[] = [
   },
   {
     title: 'Current ephemeris',
-    icon: 'pi pi-compass',
+    icon: 'compass',
     fields: [
-      { key: 'ra', label: 'Right ascension', description: 'Right Ascension of the current ephemeris (hh:mm, ICRF)' },
-      { key: 'dec', label: 'Declination', unit: 'degrees', description: 'Declination of the current ephemeris (degrees, ICRF)' },
+      { key: 'ra', label: 'Right ascension', description: 'Right Ascension of the current ephemeris' },
+      { key: 'dec', label: 'Declination', unit: 'degrees', description: 'Declination of the current ephemeris' },
       { key: 'rate', label: 'Plane-of-sky rate', unit: 'arc-seconds per minute', description: 'Plane-of-sky rate of motion (arc-seconds per minute)' },
       { key: 'elong', label: 'Solar elongation', unit: 'degrees', description: 'Solar elongation of the current ephemeris (degrees)' },
       { key: 'unc', label: 'Current position uncertainty', unit: 'arc-minutes', description: '1-sigma uncertainty in the plane-of-sky of the current ephemeris (arc-minutes)' },
-      { key: 'uncP1', label: 'Position uncertainty in one day', unit: 'arc-minutes', description: '1-sigma uncertainty in the plane-of-sky one day after the current ephemeris (arc-minutes)' },
-      { key: 'Vmag', label: 'V-band magnitude', unit: 'mag', description: 'V-band magnitude estimate of the current ephemeris (mag)' },
+      { key: 'uncP1', label: 'Position uncertainty in one day', unit: 'arc-minutes', description: '1-sigma uncertainty in the plane-of-sky one day after the current ephemeris (arc-minutes)' }     
     ],
   },
-  {
-    title: 'Brightness & size',
-    icon: 'pi pi-sun',
-    fields: [
-      { key: 'H', label: 'Absolute magnitude', description: 'Absolute magnitude' },
-    ],
-  },
-  {
-    title: 'Earth approach',
-    icon: 'pi pi-globe',
-    fields: [
-      { key: 'rating', label: 'Impact rating', description: 'A rating to characterize the chances of an Earth impact (0=negligible, 1=small, 2=modest, 3=moderate, 4=elevated)' },
-      { key: 'caDist', label: 'Close-approach distance', unit: 'lunar distances (LD)', description: 'Close-approach distance to Earth in lunar distances (LD)' },
-      { key: 'moid', label: 'Minimum orbit intersection distance', unit: 'au', description: 'Minimum distance between the orbits of Earth and the object (au)' },
-      { key: 'vInf', label: 'Asymptotic velocity', unit: 'km/s', description: 'Asymptotic velocity relative to Earth (when defined)' },
-    ],
-  },
+  
   {
     title: 'Classification scores',
-    icon: 'pi pi-tags',
+    icon: 'tags',
     fields: [
-      { key: 'neoScore', label: 'NEO score', unit: '%', description: 'Score for the object being a NEO (0-100)' },
-      { key: 'neo1kmScore', label: 'NEO larger than 1 km score', unit: '%', description: 'Score for the object being an NEO larger than 1 km in diameter (0-100)' },
-      { key: 'phaScore', label: 'PHA score', unit: '%', description: 'Score for the object being a PHA (0-100)' },
-      { key: 'ieoScore', label: 'IEO score', unit: '%', description: 'Score for the object being an IEO, Interior Earth Object (0-100)' },
-      { key: 'geocentricScore', label: 'Geocentric orbit score', unit: '%', description: 'Score for the object having a geocentric orbit (0-100)' },
-      { key: 'tisserandScore', label: 'Jupiter Tisserand score', unit: '%', description: 'Score for the object having a Jupiter tisserand invariant less than 3, comet-like orbit (0-100)' },
+      { key: 'neoScore', label: 'NEO score',  description: 'Score for the object being a NEO (0-100)' },
+      { key: 'neo1kmScore', label: 'NEO larger than 1 km score',   description: 'Score for the object being an NEO larger than 1 km in diameter (0-100)' },
+      { key: 'phaScore', label: 'PHA score',   description: 'Score for the object being a PHA (0-100)' },
+      { key: 'ieoScore', label: 'IEO score',  description: 'Score for the object being an IEO, Interior Earth Object (0-100)' },
+      { key: 'geocentricScore', label: 'Geocentric orbit score',  description: 'Score for the object having a geocentric orbit (0-100)' },
+      { key: 'tisserandScore', label: 'Jupiter Tisserand score', description: 'Score for the object having a Jupiter tisserand invariant less than 3, comet-like orbit (0-100)' },
     ],
   },
 ];
@@ -113,7 +97,7 @@ function displayValue(value: ScoutValue | undefined, unit?: string): string {
 
 @Component({
   selector: 'app-overview',
-  imports: [AgGridAngular, ButtonModule, DrawerModule],
+  imports: [AgGridAngular, ButtonModule, DrawerModule, Compass, Globe, Sun, Tags, Check, PIcon, ChartLine, Compass, ],
   styleUrl: './overview.scss',
   templateUrl: './overview.html',
 })
@@ -143,14 +127,14 @@ export class Overview {
     return {
       objectName: String(object.objectName ?? 'Unknown object'),
       elevated,
-      statusIcon: elevated ? 'pi pi-exclamation-triangle' : 'pi pi-shield',
+      statusIcon: elevated ? 'exclamation-triangle' : 'shield',
       statusTitle: elevated ? 'Elevated impact indicator' : 'No elevated impact indicator',
       ratingValue: hasValue(object.rating) ? String(object.rating) : 'Not available',
       highlights: [
-        { label: 'Observations', value: displayValue(object.nObs), icon: 'pi-eye' },
-        { label: 'Observation arc', value: displayValue(object.arc, 'h'), icon: 'pi-clock' },
-        { label: 'Closest approach', value: displayValue(object.caDist, 'LD'), icon: 'pi-globe' },
-        { label: 'PHA likelihood', value: displayValue(object.phaScore, '%'), icon: 'pi-shield' },
+        { label: 'Observations', value: displayValue(object.nObs), icon: 'eye' },
+        { label: 'Observation arc', value: displayValue(object.arc, 'h'), icon: 'clock' },
+        { label: 'Closest approach', value: displayValue(object.caDist, 'LD'), icon: 'globe' },
+        { label: 'PHA likelihood', value: displayValue(object.phaScore, '%'), icon: 'shield' },
       ],
       sections,
     };

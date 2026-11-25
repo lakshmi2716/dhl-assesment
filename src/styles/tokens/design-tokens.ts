@@ -14,6 +14,7 @@ export const designTokens = {
       950: '#062b45',
     },
     white: '#ffffff',
+    muted:'#e5e5e5'
   },
   radius: {
     control: '0.5rem',

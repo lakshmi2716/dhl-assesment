@@ -1,1 +1,185 @@
-<p>contact works!</p>
+<main class="contact-page">
+    <header class="page-heading">
+        <h1>Contact Us</h1>
+        <p>Ready to start your next project? Our team is here to help you succeed. Reach<br class="desktop-break" /> out
+            and let's discuss how we can bring your ideas to life.</p>
+    </header>
+
+    <div class="contact-grid">
+        <section class="contact-channels" aria-label="Ways to get in touch">
+            <p-card styleClass="channel-card">
+                <div class="channel-content">
+                    <svg data-p-icon="envelope" [size]="26"></svg>
+                    <div class="channel-content-body">
+                        <h3>Email</h3>
+                        <p class="sub-muted-text">Get a response within 24 hours</p><a
+                            href="mailto:hello@company.com">hello&#64;company.com</a>
+                    </div>
+                </div>
+            </p-card>
+            <p-card styleClass="channel-card">
+                <div class="channel-content">
+                    <svg data-p-icon="comments" [size]="26"></svg>                    
+                    <div class="channel-content-body">
+                        <h3>Live Chat</h3>
+                        <p  class="sub-muted-text">Instant support available now</p> 
+                        <a href=" ">Start Chatting</a>                    </div>
+                </div>
+            </p-card>
+            <p-card styleClass="channel-card">
+                <div class="channel-content">
+                    <svg data-p-icon="phone" [size]="26"></svg> 
+                    <div class="channel-content-body">
+                        <h3>Phone</h3>
+                        <p class="sub-muted-text">Mon-Fri, 9AM-6PM EST</p><a href="tel:+15551234567">+1 (555) 123-4567</a>
+                    </div>
+                </div>
+            </p-card>
+            <p-card styleClass="channel-card">
+                <div class="channel-content">
+                    <svg data-p-icon="map-marker" [size]="26"></svg> 
+                    <div class="channel-content-body">
+                        <h3>Office</h3>
+                        <p class="sub-muted-text">Schedule an in-person meeting</p><a
+                            href="" target="_blank"
+                            rel="noreferrer">123 Innovation St, Tech City</a>
+                    </div>
+                </div>
+            </p-card>
+        </section>
+
+        <section aria-labelledby="form-title">
+            <p-card styleClass="form-card">
+                <h2 id="form-title">Send us a message</h2>
+                <p class="form-description">Fill out the form below and we'll get back to you within 24 hours.</p>
+                @if (submitted()) {
+                <div class="success-message">
+                    <span class="success-icon"><i class="pi pi-check" aria-hidden="true"></i></span>
+                    <h3>Thanks for reaching out!</h3>
+                    <p-message severity="success" variant="simple">This is a design preview. Your message has not been
+                        sent.</p-message>
+                    <p-button label="Back to the form" styleClass="submit-button" (onClick)="reset()" />
+                </div>
+                } @else {
+                <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+                    <div class="name-fields">
+                        <div class="field">
+                            <label for="firstName">First Name <span class="required">*</span></label>
+                            <input pInputText id="firstName" formControlName="firstName" placeholder="John"
+                                autocomplete="given-name" required [attr.aria-invalid]="invalid('firstName')"
+                                [attr.aria-describedby]="invalid('firstName') ? 'firstName-error' : null" />
+                            @if (invalid('firstName')) { <p-message id="firstName-error" severity="error"
+                                variant="simple" size="small">Enter your first name.</p-message> }
+                        </div>
+                        <div class="field">
+                            <label for="lastName">Last Name <span class="required">*</span></label>
+                            <input pInputText id="lastName" formControlName="lastName" placeholder="Doe"
+                                autocomplete="family-name" required [attr.aria-invalid]="invalid('lastName')"
+                                [attr.aria-describedby]="invalid('lastName') ? 'lastName-error' : null" />
+                            @if (invalid('lastName')) { <p-message id="lastName-error" severity="error" variant="simple"
+                                size="small">Enter your last name.</p-message> }
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input pInputText id="email" type="email" formControlName="email"
+                            placeholder="john&#64;company.com" autocomplete="email" required
+                            [attr.aria-invalid]="invalid('email')" class="full-width"
+                            [attr.aria-describedby]="invalid('email') ? 'email-error' : null" />
+                        @if (invalid('email')) { <p-message id="email-error" severity="error" variant="simple"
+                            size="small">Enter a valid email address.</p-message> }
+                    </div>
+                    <div class="field">
+                        <label for="company">Company</label>
+                        <input pInputText id="company" formControlName="company" placeholder="Your Company"
+                            autocomplete="organization"   class="full-width"/>
+                    </div>
+                    <div class="field">
+                        <label for="message">Message <span class="required">*</span></label>
+                        <textarea pTextarea id="message" formControlName="message"  class="full-width"
+                            placeholder="Tell us about your project, goals, or how we can help..." rows="2" required
+                            [attr.aria-invalid]="invalid('message')"
+                            [attr.aria-describedby]="invalid('message') ? 'message-error' : null"></textarea>
+                        @if (invalid('message')) { <p-message id="message-error" severity="error" variant="simple"
+                            size="small">Tell us how we can help.</p-message> }
+                    </div>
+                    <div class="field">
+                        <div class="consent">
+                            <p-checkbox  inputId="consent" formControlName="consent"  [binary]="true" inputId="preview-checkbox" />
+                            <label pLabel for="preview-checkbox"> I agree to the <a class="font-semibold text-underline">Terms of Service</a> and 
+                                <a class="font-semibold text-underline"> Privacy Policy </a> </label>
+
+                            <!-- <p-checkbox inputId="consent" formControlName="consent" [binary]="true" [required]="true"
+                                [ariaLabelledBy]="invalid('consent') ? 'consent-label consent-error' : 'consent-label'" />
+                            <div id="consent-label"><label for="consent">I agree to the </label><p-button
+                                    label="Terms of Service" [link]="true" styleClass="text-link"
+                                    (onClick)="openDialog('terms')" /><span> and </span><p-button label="Privacy Policy"
+                                    [link]="true" styleClass="text-link" (onClick)="openDialog('privacy')" /></div> -->
+                        </div>
+                        @if (invalid('consent')) { <p-message id="consent-error" severity="error" variant="simple"
+                            size="small">Please agree to the terms and privacy policy.</p-message> }
+                    </div>
+                    <p-button type="submit" label="Submit" styleClass="submit-button" />
+                </form>
+                }
+            </p-card>
+        </section>
+    </div>
+
+    <p-divider styleClass="section-divider" />
+    <section aria-label="Office hours and contact information">
+        <p-card styleClass="details-panel">
+            <div class="details-grid">
+                <div>
+                    <h2>Office Hours</h2>
+                    <ul class="details-list">
+                        <li>
+                            <span>Monday - Friday</span>
+                            <span>9:00 AM - 6:00 PM EST</span>
+                        </li>
+                        <li>
+                            <span>Saturday</span>
+                            <span>10:00 AM - 4:00 PM EST</span>
+                        </li>
+                        <li>
+                            <span>Sunday</span>
+                            <span>Closed</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>Contact Information</h2>
+                    <ul class="details-list">
+                        <li>
+                            <span>Email</span>
+                            <span><a href="mailto:hello@company.com">hello&#64;company.com</a></span>
+                        </li>
+                        <li>
+                            <span>Phone</span>
+                            <span><a href="tel:+15551234567">+1 (555) 123-4567</a></span>
+                        </li>
+                        <li>
+                            <span>Address</span>
+                            <span>123 Innovation St, Tech City</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </p-card>
+    </section>
+</main>
+
+<p-dialog [header]="dialogTitle" [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [modal]="true"
+    [dismissableMask]="true" [draggable]="false" [resizable]="false" styleClass="contact-dialog"
+    [style]="{ width: '420px', maxWidth: 'calc(100vw - 40px)' }">
+    @if (dialogKind() === 'chat') {
+    <p>Live chat isn’t connected in this preview. You can reach our team by email instead.</p>
+    <a class="email-link" href="mailto:hello@company.com">hello&#64;company.com</a>
+    } @else {
+    <p>This is a design preview. No information is sent or stored. Replace this notice with your company’s policy before
+        publishing.</p>
+    }
+    <ng-template #footer>
+        <p-button label="Close" styleClass="submit-button" (onClick)="dialogVisible.set(false)" />
+    </ng-template>
+</p-dialog>

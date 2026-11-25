@@ -6,7 +6,7 @@ const { color, radius, spacing, typography, shadow } = designTokens;
 
 const CustomPreset = definePreset(Nora, {
   semantic: {
-    primary: color.primary,
+    primary: color.primary
   },
   components: {
     button: {
@@ -53,6 +53,11 @@ const CustomPreset = definePreset(Nora, {
         color: '{text.muted.color}',
       },
     },
+    divider:{
+      root:{
+        borderColor:color.muted
+      }
+    }
   },
 });
 

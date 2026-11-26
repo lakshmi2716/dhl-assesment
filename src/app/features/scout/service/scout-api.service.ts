@@ -5,7 +5,7 @@ import { ScoutApiResponse, ScoutObject } from '../models/scout-object.model';
 
 const SCOUT_API_URL = 'https://ssd-api.jpl.nasa.gov/scout.api';
  
-const PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(SCOUT_API_URL)}`;
+const PROXY_URL = `https://corsproxy.io/?key=webdemo1&url=${encodeURIComponent(SCOUT_API_URL)}`;
 
  
 
@@ -14,7 +14,7 @@ export class ScoutApiService {
   private readonly http = inject(HttpClient);
 
   getObjects(): Observable<ScoutObject[]> {
-    return this.http.get<ScoutApiResponse>(SCOUT_API_URL).pipe(
+    return this.http.get<ScoutApiResponse>(PROXY_URL).pipe(
       map(({ data = [] }) => data),
     );
   }

@@ -1,0 +1,1 @@
+import{k as e}from"./chunk-D1gAkhoi.js";export{e as envelope};
